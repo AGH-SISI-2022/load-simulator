@@ -27,8 +27,8 @@ class PastDataGenerator:
         self.videos = []
         self.videos_to_remove = []
 
-        date_start = int(datetime.timestamp(datetime(*date_start)))
-        date_end =  int(datetime.timestamp(datetime(*date_end)))
+        self.date_start = int(datetime.timestamp(datetime(*date_start)))
+        self.date_end =  int(datetime.timestamp(datetime(*date_end)))
         
         step = gcd(send_period, watch_period)
 
@@ -37,43 +37,37 @@ class PastDataGenerator:
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
 
-            while date_start < date_end:
+            while self.date_start < self.date_end:
 
-                if date_start % send_period == 0:
+                if self.date_start % send_period == 0:
                     ytber = get_random_youtuber(self.youtubers)
                     video_name = "test video"
                     video_time = normal_distribution(ytber.avg_video_time, ytber.avg_video_time//2, 1)
-                    video = Video(video_name, video_time, ytber)
+                    video = Video(video_name, video_time, ytber, self.date_start)
                     self.videos.append(video)
-                    writer.writerow({
-                        'endpoint': '/send', 
-                        'current_time': date_start,
-                        'title': video.title, 
-                        'video_time': video.video_time, 
-                        'upload_time': video.upload_time,
-                        'youtuber_username': video.youtuber.username,
-                        'subscribers': video.youtuber.subscribers, 
-                        'request_count': 1
-                    })
-                    self.videos_to_remove.append((date_start + max(20, 3 * video.video_time), video))
+                    self.write_row(writer, video, 1)
+                    self.videos_to_remove.append((self.date_start + max(20, 3 * video.video_time), video))
 
-                if date_start % watch_period == 0:
+                if self.date_start % watch_period == 0:
                     for v in self.videos:
                         views = v.get_views()
-                        writer.writerow({
-                            'endpoint': '/watch', 
-                            'current_time': date_start,
-                            'title': v.title, 
-                            'video_time': v.video_time, 
-                            'upload_time': v.upload_time,
-                            'youtuber_username': v.youtuber.username,
-                            'subscribers': v.youtuber.subscribers, 
-                            'request_count': views
-                        })
-
+                        self.write_row(writer, v, views)
+                        
                 for (date_time, vid) in self.videos_to_remove:
-                    if date_start >= date_time:
+                    if self.date_start >= date_time:
                         self.videos_to_remove.remove((date_time, vid))
                         self.videos.remove(vid)
 
-                date_start += step
+                self.date_start += step
+
+    def write_row(self, writer, v, views):
+        writer.writerow({
+            'endpoint': '/watch', 
+            'current_time': self.date_start,
+            'title': v.title, 
+            'video_time': v.video_time, 
+            'upload_time': v.upload_time,
+            'youtuber_username': v.youtuber.username,
+            'subscribers': v.youtuber.subscribers, 
+            'request_count': views
+        })
