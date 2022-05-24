@@ -34,7 +34,8 @@ class Video:
             "title": self.title, 
             "video_time": self.video_time,
             "upload_time": self.upload_time, 
-            "youtuber_username": self.youtuber.username
+            "youtuber_username": self.youtuber.username,
+            "subscribers": self.youtuber.subscribers,
             })
 
     def get_views(self) -> int:
