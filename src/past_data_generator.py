@@ -1,7 +1,7 @@
 from datetime import datetime
 from math import gcd
 import csv
-from src.utils import get_random_youtuber, normal_distribution, youtubers
+from src.utils import get_random_youtuber, normal_distribution, generate_title, youtubers
 from src.video import Video
 
 class PastDataGenerator: 
@@ -29,7 +29,7 @@ class PastDataGenerator:
 
                 if self.date_start % send_period == 0:
                     ytber = get_random_youtuber(self.youtubers)
-                    video_name = "test video"
+                    video_name = generate_title()
                     video_time = normal_distribution(ytber.avg_video_time, ytber.avg_video_time//2, 1)
                     video = Video(video_name, video_time, ytber, self.date_start)
                     self.videos.append(video)

@@ -1,6 +1,6 @@
 import requests
 from threading import Timer
-from src.utils import normal_distribution, get_random_youtuber, youtubers
+from src.utils import normal_distribution, get_random_youtuber, generate_title, youtubers
 from src.video import Video
 from src.repeated_timer import RepeatedTimer
 
@@ -20,7 +20,7 @@ class LoadSimulator:
     def __send_video(self) -> None:
         # make video for one of ytbers
         ytber = get_random_youtuber(self.youtubers)
-        video_name = "test video" # TODO randomize it later
+        video_name = generate_title()
         video_time = normal_distribution(ytber.avg_video_time, ytber.avg_video_time//2, 1)
         video = Video(video_name, video_time, ytber)
 

@@ -2,6 +2,7 @@ import numpy as np
 import random
 from src.youtuber import YouTuber
 from src.tag import Tag
+from src.random_title_generator import RandomTitleGenerator
 
 youtubers = [
     YouTuber('PewDiePie', 100, 0.2, 20, 15, [(Tag.GAMING, 0.6), (Tag.FUNNY, 0.3), (Tag.NEWS, 0.1)]),
@@ -9,7 +10,7 @@ youtubers = [
     YouTuber('RATIRL', 10, 0.9, 15, 16, [(Tag.GAMING, 0.9), (Tag.FUNNY, 0.1)]),
     YouTuber('DIY Perks', 25, 0.95, 20, 1, [(Tag.DOCUMENTARY, 0.6), (Tag.SCIENCE, 0.4)]),
     YouTuber('Linus Tech Tips', 60, 0.3, 10, 30, [(Tag.NEWS, 0.5), (Tag.GAMING, 0.4), (Tag.DOCUMENTARY, 0.1)]),
-    YouTuber('Uwaga! Naukowy Bełkot', 15, 0.5, 18, 5, [(Tag.SCIENCE, 0.8), (Tag.FUNNY, 0.2)]),
+    YouTuber('Uwaga! Naukowy Belkot', 15, 0.5, 18, 5, [(Tag.SCIENCE, 0.8), (Tag.FUNNY, 0.2)]),
     YouTuber('Thebausffs', 10, 1.0, 11, 12, [(Tag.GAMING, 1.0)]),
     YouTuber('LEC', 10, 0.5, 5, 10, [(Tag.SPORTS, 0.7), (Tag.GAMING, 0.1), (Tag.DOCUMENTARY, 0.1), (Tag.FUNNY, 0.1)]),
     YouTuber('TikTok ABC', 30, 0.8, 1, 50, [(Tag.FUNNY, 0.7), (Tag.COOKING, 0.3)]),
@@ -39,3 +40,25 @@ def get_tag_mltprs(tags: list):
         mult_y *= y
         mult_z *= z
     return (mult_x/len(tags), mult_y/len(tags), mult_z/len(tags))
+
+def generate_title():
+    
+    clickbaitType = random.randint(1, 8)
+    if clickbaitType == 1:
+        headline = RandomTitleGenerator.generateAreMillennialsKillingHeadline()
+    elif clickbaitType == 2:
+        headline = RandomTitleGenerator.generateWhatYouDontKnowHeadline()
+    elif clickbaitType == 3:
+        headline = RandomTitleGenerator.generateBigCompaniesHateHerHeadline()
+    elif clickbaitType == 4:
+        headline = RandomTitleGenerator.generateYouWontBelieveHeadline()
+    elif clickbaitType == 5:
+        headline = RandomTitleGenerator.generateDontWantYouToKnowHeadline()
+    elif clickbaitType == 6:
+        headline = RandomTitleGenerator.generateGiftIdeaHeadline()
+    elif clickbaitType == 7:
+        headline = RandomTitleGenerator.generateReasonsWhyHeadline()
+    elif clickbaitType == 8:
+        headline = RandomTitleGenerator.generateJobAutomatedHeadline()
+
+    return headline
