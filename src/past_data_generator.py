@@ -45,13 +45,13 @@ class PastDataGenerator:
                     video_time = normal_distribution(ytber.avg_video_time, ytber.avg_video_time//2, 1)
                     video = Video(video_name, video_time, ytber, self.date_start)
                     self.videos.append(video)
-                    self.write_row(writer, video, 1)
+                    self.write_row(writer, '/send', video, 1)
                     self.videos_to_remove.append((self.date_start + max(20, 3 * video.video_time), video))
 
                 if self.date_start % watch_period == 0:
                     for v in self.videos:
                         views = v.get_views()
-                        self.write_row(writer, v, views)
+                        self.write_row(writer, '/watch', v, views)
                         
                 for (date_time, vid) in self.videos_to_remove:
                     if self.date_start >= date_time:
@@ -60,9 +60,9 @@ class PastDataGenerator:
 
                 self.date_start += step
 
-    def write_row(self, writer, v, views):
+    def write_row(self, writer, endpoint, v, views):
         writer.writerow({
-            'endpoint': '/watch', 
+            'endpoint': endpoint, 
             'current_time': self.date_start,
             'title': v.title, 
             'video_time': v.video_time, 
