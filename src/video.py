@@ -41,7 +41,9 @@ class Video:
             "tag": self.tags[0].name,
             })
 
-    def get_views(self, current_time=int(time.time())) -> int:
+    def get_views(self, current_time = None) -> int:
+        if not current_time:
+            current_time=int(time.time()) 
         time_diff = current_time - self.upload_time
         max_views = int(self.youtuber.subscribers * self.youtuber.real_subs) // 2
         (x,y,z) = get_tag_mltprs(self.tags)
