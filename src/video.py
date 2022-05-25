@@ -1,7 +1,8 @@
 import time, json, random
 from math import floor, ceil
-from src.utils import gaussian
+from src.utils import gaussian, get_random_tag, get_tag_mltprs
 from src.youtuber import YouTuber
+from src.tag import Tag
 
 class Video:
     '''
@@ -24,6 +25,7 @@ class Video:
         self.video_time = video_time
         self.youtuber = youtuber
         self.expiration = self.upload_time + max(20, 3*self.video_time)
+        self.tags = self.__generate_tags()
 
     def __str__(self):
         return f"""'{self.title}'({self.video_time} mins) from {self.youtuber.username}
@@ -36,11 +38,20 @@ class Video:
             "upload_time": self.upload_time, 
             "youtuber_username": self.youtuber.username,
             "subscribers": self.youtuber.subscribers,
+            "tags": [t.name for t in self.tags],
             })
 
-    def get_views(self) -> int:
-        current_time = int(time.time())
+    def get_views(self, current_time=int(time.time())) -> int:
         time_diff = current_time - self.upload_time
         max_views = int(self.youtuber.subscribers * self.youtuber.real_subs) // 2
-        views = gaussian(time_diff, self.video_time * 1.5, self.video_time) * max_views
+        (x,y,z) = get_tag_mltprs(self.tags)
+        views = x * gaussian(time_diff, y * self.video_time * 1.5, z * self.video_time) * max_views
         return max(0, random.randint(floor(min(views - 2, 0.9 * views)), ceil(max(views + 2, 1.1 * views))))
+        
+    def __generate_tags(self) -> None:
+        main_tag = get_random_tag(self)
+        if random.random() < 0.01:
+            return [main_tag, Tag.HIT]
+        elif random.random() < 0.01:
+            return [main_tag, Tag.MISS]
+        return [main_tag]
