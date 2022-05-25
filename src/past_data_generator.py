@@ -21,7 +21,7 @@ class PastDataGenerator:
         step = gcd(send_period, watch_period)
 
         with open('data/requests_data.csv', 'w', newline='') as csvfile:
-            fieldnames = ['endpoint', 'current_time', 'title', 'video_time', 'upload_time', 'youtuber_username', 'subscribers', 'tags', 'request_count']
+            fieldnames = ['endpoint', 'current_time', 'title', 'video_time', 'upload_time', 'youtuber_username', 'subscribers', 'tag', 'request_count']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
 
@@ -57,6 +57,6 @@ class PastDataGenerator:
             'upload_time': v.upload_time,
             'youtuber_username': v.youtuber.username,
             'subscribers': v.youtuber.subscribers, 
-            'tags': [t.name for t in v.tags],
+            'tag': v.tags[0].name,
             'request_count': views
         })
