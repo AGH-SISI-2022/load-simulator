@@ -26,6 +26,7 @@ class Video:
         self.youtuber = youtuber
         self.expiration = self.upload_time + max(20, 3*self.video_time)
         self.tags = self.__generate_tags()
+        self.id = self.upload_time
 
     def __str__(self):
         return f"""'{self.title}'({self.video_time} mins) from {self.youtuber.username}
@@ -33,6 +34,7 @@ class Video:
 
     def get_video_information(self) -> str: 
         return json.dumps({
+            "id": self.id,
             "title": self.title, 
             "video_time": self.video_time,
             "upload_time": self.upload_time, 

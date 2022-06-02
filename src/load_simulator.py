@@ -5,13 +5,18 @@ from src.video import Video
 from src.repeated_timer import RepeatedTimer
 
 class LoadSimulator:
-    def __init__(self, ip: str, send_period: int = 10, watch_period: int = 1, subscribers_mltpr: int = 1):
+    def __init__(self, ip: str, send_period: int = 10, watch_period: int = 1, subscribers_mltpr: int = 1, time_mltpr: int = 1):
         self.ip = ip
+        self.send_period = send_period
+        self.watch_period = watch_period
+        self.subscribers_mltpr = subscribers_mltpr
+        self.time_mltpr = time_mltpr
 
         self.youtubers = youtubers
 
         for ytber in self.youtubers:
             ytber.subscribers *= subscribers_mltpr
+            ytber.avg_video_time *= time_mltpr
 
         self.videos = []
         self.send_timer = RepeatedTimer(send_period, self.__send_video)
@@ -32,7 +37,7 @@ class LoadSimulator:
         requests.post(f'{self.ip}/send', video.get_video_information())
 
         # add timer to remove it later
-        Timer(max(20, 3 * video.video_time), self.__remove_video, [video]).start()
+        Timer(max(20*self.time_mltpr, 3 * video.video_time), self.__remove_video, [video]).start()
 
     def __view_videos(self) -> None:
         for v in self.videos:
@@ -45,4 +50,4 @@ class LoadSimulator:
         try:
             self.videos.remove(video)
         except:
-            print(f"Failed to remove {video} (shouldn't happen 🤣")
+            print(f"Failed to remove {video} (shouldn't happen 🤣)")

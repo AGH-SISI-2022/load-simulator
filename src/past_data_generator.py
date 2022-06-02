@@ -5,12 +5,13 @@ from src.utils import get_random_youtuber, normal_distribution, generate_title, 
 from src.video import Video
 
 class PastDataGenerator: 
-    def __init__(self, date_start, date_end, send_period, watch_period, subscribers_mltpr):
+    def __init__(self, date_start, date_end, send_period, watch_period, subscribers_mltpr, time_mltpr):
 
         self.youtubers = youtubers
 
         for ytber in self.youtubers:
             ytber.subscribers *= subscribers_mltpr
+            ytber.avg_video_time *= time_mltpr
 
         self.videos = []
         self.videos_to_remove = []
@@ -21,7 +22,7 @@ class PastDataGenerator:
         step = gcd(send_period, watch_period)
 
         with open('data/requests_data.csv', 'w', newline='') as csvfile:
-            fieldnames = ['endpoint', 'current_time', 'title', 'video_time', 'upload_time', 'youtuber_username', 'subscribers', 'tag', 'request_count']
+            fieldnames = ['endpoint', 'id', 'current_time', 'title', 'video_time', 'upload_time', 'youtuber_username', 'subscribers', 'tag', 'request_count']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
 
@@ -34,7 +35,7 @@ class PastDataGenerator:
                     video = Video(video_name, video_time, ytber, self.date_start)
                     self.videos.append(video)
                     self.write_row(writer, '/send', video, 1)
-                    self.videos_to_remove.append((self.date_start + max(20, 3 * video.video_time), video))
+                    self.videos_to_remove.append((self.date_start + max(20*time_mltpr, 3 * video.video_time), video))
 
                 if self.date_start % watch_period == 0:
                     for v in self.videos:
@@ -51,6 +52,7 @@ class PastDataGenerator:
     def write_row(self, writer, endpoint, v, views):
         writer.writerow({
             'endpoint': endpoint, 
+            'id': v.id,
             'current_time': self.date_start,
             'title': v.title, 
             'video_time': v.video_time, 
