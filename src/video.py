@@ -54,8 +54,8 @@ class Video:
         
     def __generate_tags(self) -> None:
         main_tag = get_random_tag(self)
-        if random.random() < 0.01:
-            return [main_tag, Tag.HIT]
-        elif random.random() < 0.01:
-            return [main_tag, Tag.MISS]
+        # if random.random() < 0.01:
+        #     return [main_tag, Tag.HIT]
+        # elif random.random() < 0.01:
+        #     return [main_tag, Tag.MISS]
         return [main_tag]
