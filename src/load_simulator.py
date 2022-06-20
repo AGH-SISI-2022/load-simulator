@@ -1,4 +1,4 @@
-import requests
+import grequests
 from threading import Timer
 from src.utils import normal_distribution, get_random_youtuber, generate_title, youtubers
 from src.video import Video
@@ -34,7 +34,8 @@ class LoadSimulator:
 
         # send video
         print(f'Sending video {video.title} from {ytber.username}')
-        requests.post(f'{self.ip}/send', video.get_video_information())
+        rs = (grequests.post(f'{self.ip}/send', data=video.get_video_information()))
+        grequests.map(rs)
 
         # add timer to remove it later
         Timer(max(20*self.time_mltpr, 3 * video.video_time), self.__remove_video, [video]).start()
@@ -43,8 +44,8 @@ class LoadSimulator:
         for v in self.videos:
             views = v.get_views()
             print(f'Sending {views} view requests for video from {v.youtuber.username}')
-            for _ in range(views):
-                requests.post(f'{self.ip}/watch', v.get_video_information())
+            rs = (grequests.post(f'{self.ip}/watch', data=v.get_video_information()) for _ in range(views))
+            grequests.map(rs)
 
     def __remove_video(self, video: Video) -> None:
         try:
