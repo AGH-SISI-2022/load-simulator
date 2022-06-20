@@ -4,6 +4,9 @@ from src.youtuber import YouTuber
 from src.tag import Tag
 from src.random_title_generator import RandomTitleGenerator
 
+np.random.seed(2137)
+random.seed(2137)
+
 youtubers = [
     YouTuber('PewDiePie', 100, 0.2, 20, 15, [(Tag.GAMING, 0.6), (Tag.FUNNY, 0.3), (Tag.NEWS, 0.1)]),
     YouTuber('Mark Rober', 40, 1.0, 20, 1, [(Tag.SCIENCE, 0.8), (Tag.FUNNY, 0.2)]),
