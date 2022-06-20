@@ -34,7 +34,7 @@ class LoadSimulator:
 
         # send video
         print(f'Sending video {video.title} from {ytber.username}')
-        rs = (grequests.post(f'{self.ip}/send', data=video.get_video_information()))
+        rs = (grequests.post(f'{self.ip}/send', data=video.get_video_information()), )
         grequests.map(rs)
 
         # add timer to remove it later
